@@ -26,6 +26,7 @@ try {
         difficulty INT,
         comments TEXT,
         ingredients TEXT[] NOT NULL,
+        elaboration_time INT NOT NULL,
         steps TEXT[] NOT NULL,
         user_id INT,
         CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE

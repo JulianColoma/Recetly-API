@@ -1,4 +1,5 @@
 import { UserModel } from "../models/user.js";
+import userSchema from "../schemas/user.js"
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 
@@ -7,8 +8,8 @@ dotenv.config()
 export class UserController {
     static create = async (req, res) => {
             try {
-                const input = req.body;
-                await UserModel.create(input); 
+                const validated_input = userSchema.parse(req.body);
+                await UserModel.create(validated_input); 
                 res.status(201).end(); 
             } catch (error) {
                 console.error(error);
@@ -17,10 +18,10 @@ export class UserController {
         }
     static login = async (req, res) => {
             try {
-                const input = req.body;
-                const user = await UserModel.login(input)
+                const validated_input = userSchema.parse(req.body);
+                const user = await UserModel.login(validated_input)
                 const exp = user.admin? process.env.ADMINEXP : process.env.USEREXP
-                const token = jwt.sign({id: user.id, name: user.name}, process.env.SECRET,{
+                const token = jwt.sign({name: user.name, user_id: user.user_id}, process.env.SECRET,{
                     expiresIn: exp
                 })
                 res
