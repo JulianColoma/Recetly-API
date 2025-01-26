@@ -3,6 +3,7 @@ import { RecipeModel } from "../models/recipe.js"
 export class RecipeController {
     static getAll = async (req, res) => {
         const { user } = req.session
+        console.log(user)
         if(!user) return res.status(403).send('Access not authorized')
         try{
         const recipes = await RecipeModel.getAll()
@@ -45,17 +46,6 @@ export class RecipeController {
         try{
         const { id } = req.params
         await RecipeModel.deleteById(id)
-        res.status(200).end()
-        } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: error.message });
-        }
-    }
-    static deleteRecipeUser = async (req, res) => {
-        const { user } = req.session
-        if(!user) return res.status(403).send('Access not authorized')
-        try{
-        await RecipeModel.deleteByUser(user.user_id)
         res.status(200).end()
         } catch (error) {
             console.error(error);

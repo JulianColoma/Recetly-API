@@ -1,4 +1,4 @@
-import { pool } from "../db/db.js";
+import pool from "../db/db.js";
 
 export class  RecipeModel{
 static getAll = async () =>{
@@ -28,13 +28,6 @@ static deleteById = async (id) => {
         console.log(e)
     }
     
-}
-static deleteByUser = async (user_id) => {
-    try{
-        await pool.query(`DELETE FROM recipes WHERE user_id = $1`, [user_id])
-        }catch(e){
-            console.log(e)
-        }
 }
 static updateRecipe = async (id, input) => {
     const { rows: recipes } = await pool.query('SELECT * FROM recipes WHERE id = $1', [id])

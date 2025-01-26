@@ -8,7 +8,7 @@ export function getUserData(req, res, next) {
     req.session = {user: null}
 
     try{
-        const data = jwt.verify(token, SECRET)
+        const data = jwt.verify(token, process.env.SECRET)
         req.session.user = data
     }catch{
         req.session.user = null
