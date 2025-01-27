@@ -22,7 +22,7 @@ try {
       CREATE TABLE IF NOT EXISTS recipes (
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
-        photo BYTEA,
+        photo TEXT,
         difficulty INT,
         comments TEXT,
         ingredients TEXT[] NOT NULL,

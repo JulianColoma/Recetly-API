@@ -1,4 +1,5 @@
 import { UserModel } from "../models/user.js";
+import { RecipeModel } from "../models/recipe.js"
 import userSchema from "../schemas/user.js"
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
@@ -39,6 +40,16 @@ export class UserController {
             if(!user) return res.status(403).send('Access not authorized')
             if(!user.admin){
                 try{
+                        const recipes = await RecipeModel.getAll(user.user_id)
+                        recipes.forEach((recipe) =>{
+                            fs.unlink(`${process.env.BASEPATH + recipe.photo}`,(err) => {
+                                        if (err) {
+                                          console.error('Error al eliminar el archivo', err);
+                                        } else {
+                                          console.log('Archivo eliminado');
+                                        }
+                                      })
+                        })
                         const name = user.name
                         await UserModel.deleteUser(name)
                         res.status(200).end()
