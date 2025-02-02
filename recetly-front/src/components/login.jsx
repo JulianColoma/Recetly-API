@@ -2,9 +2,8 @@ import { Button, Input, Stack, Card } from "@chakra-ui/react"
 import {Link} from 'react-router-dom'
 import { Field } from "@/components/ui/field"
 import styled from "styled-components"
-import {loginUser} from '../services/recipes.js'
 import { useState } from "react"
-import { FaHandHolding } from "react-icons/fa"
+import { User } from "@/services/user.js"
 
 const Container = styled.div`
     display: flex;
@@ -24,15 +23,14 @@ export const Login = ({type}) => {
   const handleLogin = async () => {
     
     const credentials = { name, password};
-    console.log(credentials)
-    /*const response = await loginUser(credentials);
+    const response = await User.login(credentials);
   
     if (response.success) {
       // Redirigir a la página principal o a la página deseada
       console.log("Login exitoso!");
     } else {
       console.log("Error en el login");
-    }*/
+    }
   }
   
   return (
@@ -58,7 +56,7 @@ export const Login = ({type}) => {
     </Card.Body>
     <Card.Footer justifyContent="flex-end">
       <Link to='/'><Button variant="outline">Cancel</Button></Link>
-      <Button onClick={handleLogin} variant="solid">{type == 'Login'? "Sing in" : "Sing up"}</Button>
+      <Button onClick={type == 'Login'? handleLogin : handleRegister} variant="solid">{type == 'Login'? "Sing in" : "Sing up"}</Button>
     </Card.Footer>
   </Card.Root>
     </Container>  

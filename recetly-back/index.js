@@ -7,13 +7,26 @@ import cors from 'cors';
 
 const PORT = process.env.PORT ?? 1234
 
-const corsOptions = {
-    origin: 'http://localhost:5173/', 
-  };
+app.use(cors({
+  origin: (origin, callback) => {
+    const ACCEPTED_ORIGINS = [
+      'http://localhost:5173',
+      'http://localhost:1234'
+    ]
 
+    if (ACCEPTED_ORIGINS.includes(origin)) {
+      return callback(null, true)
+    }
+
+    if (!origin) {
+      return callback(null, true)
+    }
+
+    return callback(new Error('Not allowed by CORS'))
+  }
+}))
 const app = express()
 app.disable('x-powered-by')
-app.use(cors(corsOptions));
 app.use(express.json())
 app.use(cookieParser())
 app.use(getUserData)
