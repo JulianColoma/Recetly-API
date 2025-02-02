@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import { Field } from "@/components/ui/field"
 import styled from "styled-components"
 import { useState } from "react"
-import { User } from "@/services/user.js"
+import { User } from "../../services/user.js"
 
 const Container = styled.div`
     display: flex;
