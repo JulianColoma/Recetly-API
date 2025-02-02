@@ -5,12 +5,14 @@ dotenv.config()
 
 const { Pool } = pkg
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.HOSTNAME, 
-  database: process.env.DB_NAME,
-  password: process.env.DB_PWD,
-  port: 5432, 
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
+
+pool.connect()
+  .then(() => console.log('Connected'))
+  .catch(err => console.error('Connection failed', err));
+
 try {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (

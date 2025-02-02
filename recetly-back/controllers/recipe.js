@@ -1,5 +1,5 @@
 import { RecipeModel } from "../models/recipe.js"
-import recipeSchema from "../schemas/recipe.js"
+import { recipeSchema } from "../schemas/recipe.js"
 import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()

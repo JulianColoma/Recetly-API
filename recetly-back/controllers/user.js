@@ -1,6 +1,6 @@
 import { UserModel } from "../models/user.js";
 import { RecipeModel } from "../models/recipe.js"
-import userSchema from "../schemas/user.js"
+import { userSchema } from "../schemas/user.js"
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 
