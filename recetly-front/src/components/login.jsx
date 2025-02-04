@@ -4,6 +4,7 @@ import { Field } from "@/components/ui/field"
 import styled from "styled-components"
 import { useState } from "react"
 import { User } from "../../services/user.js"
+import { useNavigate } from "react-router-dom"
 
 const Container = styled.div`
     display: flex;
@@ -12,30 +13,48 @@ const Container = styled.div`
     justify-content: center;
     height: 100vh;
     background-color: #242424;
-
 `
-
+const Here = styled.div`
+    color: #007bff;
+      text-decoration: underline;
+      font-weight: bold;
+`
 
 export const Login = ({type}) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate()
 
   const handleLogin = async () => {
     
     const credentials = { name, password};
-    const response = await User.login(credentials);
-  
-    if (response.success) {
-      // Redirigir a la página principal o a la página deseada
-      console.log("Login exitoso!");
+    const res = await User.login(credentials);
+    const response = await res.json()
+    console.log(response)
+    if (response.ok) {
+      navigate('/')
+      console.log("Login successful!");
     } else {
-      console.log("Error en el login");
+      console.log("Login error");
+    }
+  }
+
+  const handleRegister = async () => {
+    
+    const credentials = { name, password};
+    const res = await User.create(credentials);
+    const response = await res.json()
+    console.log(response)
+    if (response.ok) {
+      await handleLogin(credentials)
+    } else {
+      console.log("Register error");
     }
   }
   
   return (
     <Container>
-    <Card.Root maxW="sm">
+    <Card.Root minW={400} maxW="lg">
     <Card.Header>
       <Card.Title>{type == 'Login'? "Sing in" : "Sing up"}</Card.Title>
       <Card.Description>
@@ -54,10 +73,13 @@ export const Login = ({type}) => {
         </Field>
       </Stack>
     </Card.Body>
-    <Card.Footer justifyContent="flex-end">
+    <Card.Footer justifyContent="flex-start">
       <Link to='/'><Button variant="outline">Cancel</Button></Link>
       <Button onClick={type == 'Login'? handleLogin : handleRegister} variant="solid">{type == 'Login'? "Sing in" : "Sing up"}</Button>
     </Card.Footer>
+      {type == 'Login' && <Card.Footer>
+      <Card.Description className="singup">Doesnt have an account? </Card.Description> <Link to='/register'><Here>Sing up</Here></Link>
+      </Card.Footer>}
   </Card.Root>
     </Container>  
   )

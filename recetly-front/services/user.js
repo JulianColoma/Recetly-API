@@ -1,41 +1,36 @@
 export class User {
     static create = async (user) =>{
-        const { name, password } = user
-
-        fetch('https://recetly.onrender.com/register', {
+        
+        return fetch('https://recetly.onrender.com/register', {
             method: 'POST',
             headers:{
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({name, password})
-        })
-        .then(res => {return res.json})
-        
+            body: JSON.stringify(user)
+        })        
 }
     static login = async (user) =>{
             const { name, password } = user
 
-            fetch('https://recetly.onrender.com/login', {
+            return fetch('https://recetly.onrender.com/login', {
                 method: 'POST',
                 headers:{
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({name, password})
             })
-            .then(res => {return res.json})
             
     }
     static logout =  async () => {
-        fetch('https://recetly.onrender.com/logout', {
+        return fetch('https://recetly.onrender.com/logout', {
             method: 'POST',
         })
-        .then(res => {return res.json})
+        .then(res => res.json)
     }
     static delete =  async () => {
-        fetch('https://recetly.onrender.com/delete', {
+        return fetch('https://recetly.onrender.com/delete', {
             method: 'DELETE',
         })
-        .then(res => {return res.json})
         
     }
 }

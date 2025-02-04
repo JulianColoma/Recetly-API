@@ -13,7 +13,7 @@ export class RecipeController {
         const { user_id }  = user
         const recipes = await RecipeModel.getAll(user_id)
         res.json(recipes)
-        res.status(200).end()
+        res.status(200).json({"ok": true}).end()
         } catch (error) {
             console.error(error);
             res.status(400).json({ error: error.message });
@@ -40,7 +40,7 @@ export class RecipeController {
             const validated_input = recipeSchema.parse(req.body);
             validated_input.photo = photo.filename
             await RecipeModel.postRecipe(validated_input, user.user_id); 
-            res.status(201).end(); 
+            res.status(201).json({"ok": true}).end(); 
         } catch (error) {
             console.error(error);
             res.status(400).json({ error: error.message });

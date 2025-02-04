@@ -11,7 +11,7 @@ export class UserController {
             try {
                 const validated_input = userSchema.parse(req.body);
                 await UserModel.create(validated_input); 
-                res.status(201).end(); 
+                res.status(201).json({"ok": true}).end(); 
             } catch (error) {
                 console.error(error);
                 res.status(400).json({ error: error.message });
@@ -29,6 +29,7 @@ export class UserController {
                     .cookie('access_token', token, {
                         httpOnly:true
                     })
+                    .json({"ok": true})
                     .send({user, token})
             } catch (error) {
                 console.error(error);
@@ -52,7 +53,7 @@ export class UserController {
                         })
                         const name = user.name
                         await UserModel.deleteUser(name)
-                        res.status(200).end()
+                        res.status(200).json({"ok": true}).end()
                         } catch (error) {
                             console.error(error);
                             res.status(400).json({ error: error.message });
@@ -62,7 +63,7 @@ export class UserController {
         static logout = async (req, res) =>{
             res
                 .clearCookie('access_token')
-                .json({message:'Logout successful'})
+                .json({ok:true, message:'Logout successful'})
 
         }
 }
