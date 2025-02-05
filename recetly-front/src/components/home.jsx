@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { Link } from 'react-router-dom'
 import { Button } from "@chakra-ui/react"
+import { useAuth } from "../../hooks/auth.jsx"
 const Container = styled.div`
 
     margin: 0;
@@ -42,6 +43,7 @@ const Container = styled.div`
 
 `
 export const Home = () =>{
+    const {user, login, logout} = useAuth()
     return(
         <Container>
             <header>

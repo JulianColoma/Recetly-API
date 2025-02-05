@@ -5,6 +5,7 @@ import styled from "styled-components"
 import { useState } from "react"
 import { User } from "../../services/user.js"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../hooks/auth.jsx"
 
 const Container = styled.div`
     display: flex;
@@ -23,6 +24,7 @@ const Here = styled.div`
 export const Login = ({type}) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const {user, login, logout} = useAuth()
   const navigate = useNavigate()
 
   const handleLogin = async () => {

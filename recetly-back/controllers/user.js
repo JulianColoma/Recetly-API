@@ -29,7 +29,6 @@ export class UserController {
                     .cookie('access_token', token, {
                         httpOnly:true
                     })
-                    .json({"ok": true})
                     .send({user, token})
             } catch (error) {
                 console.error(error);
@@ -53,7 +52,7 @@ export class UserController {
                         })
                         const name = user.name
                         await UserModel.deleteUser(name)
-                        res.status(200).json({"ok": true}).end()
+                        res.status(200).json({"ok": true})
                         } catch (error) {
                             console.error(error);
                             res.status(400).json({ error: error.message });

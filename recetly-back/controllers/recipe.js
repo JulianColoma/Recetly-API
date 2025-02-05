@@ -13,7 +13,7 @@ export class RecipeController {
         const { user_id }  = user
         const recipes = await RecipeModel.getAll(user_id)
         res.json(recipes)
-        res.status(200).json({"ok": true}).end()
+        res.status(200).end()
         } catch (error) {
             console.error(error);
             res.status(400).json({ error: error.message });
@@ -60,7 +60,7 @@ export class RecipeController {
             }
           })
         await RecipeModel.deleteById(id)
-        res.status(200).end()
+        res.status(200).json({"ok": true}).end()
         } catch (error) {
             console.error(error);
             res.status(400).json({ error: error.message });
@@ -83,7 +83,7 @@ export class RecipeController {
             }
           })
         await RecipeModel.updateRecipe(id, validated_input)
-        res.status(200).end()
+        res.status(200).json({"ok": true}).end()
         } catch (error) {
             console.error(error);
             res.status(400).json({ error: error.message });
