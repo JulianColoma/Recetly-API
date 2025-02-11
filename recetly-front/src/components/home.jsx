@@ -1,7 +1,9 @@
 import styled from "styled-components"
-import { Link } from 'react-router-dom'
-import { Button } from "@chakra-ui/react"
+import { Link, useNavigate } from 'react-router-dom'
+import { Button, Card , Image } from "@chakra-ui/react"
 import { useAuth } from "../../hooks/auth.jsx"
+import { useEffect, useState } from "react"
+import { Recipe } from "../../services/recipe.js"
 const Container = styled.div`
 
     margin: 0;
@@ -42,8 +44,38 @@ const Container = styled.div`
     }
 
 `
+const RecipeCard = (recipe) =>{
+    const path = ''
+    return(
+        <Card.Root>
+            <Card.Header>recipe.title</Card.Header>
+            <Card.Body>
+                <Image src={path + recipe.photo}/>
+            </Card.Body>
+            <Card.Footer></Card.Footer>
+        </Card.Root>
+    )
+}
 export const Home = () =>{
     const {user, login, logout} = useAuth()
+    const [recipes, setRecipes] = useState([])
+    const navigate = useNavigate()
+    const hanldeClick = () =>{
+        if(user){
+            logout()
+        }else{
+            navigate('/login')
+        }
+    }
+    useEffect(() =>{
+        const fetchRecipes = async () => {
+            if (user) {
+                const response = await Recipe.getAll();
+                setRecipes(response);
+            }
+        };
+        fetchRecipes();
+    }, [user]);
     return(
         <Container>
             <header>
@@ -52,11 +84,19 @@ export const Home = () =>{
                         <img src="" alt="" />
                         <h1>Recetly</h1>
                     </div>
-                    <Link to='/login'><Button>Login</Button></Link>
+                    <Button onClick={hanldeClick}>{user?'Logout':'Login'}</Button>
                 </nav>
             </header>
             <main>
-                
+                {user && 
+                    
+                    <div>
+                        <Button>Add recipe</Button>
+                        {recipes.map((recipe) => (
+                            <RecipeCard key={recipe.id} recipe={recipe} />
+                        ))}
+                    </div>
+                }
             </main>
             <footer>
                 <p>Desarrollado por Julián Valentín Coloma Visconti</p>

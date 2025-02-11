@@ -32,8 +32,8 @@ export const Login = ({type}) => {
     const credentials = { name, password};
     const res = await User.login(credentials);
     const response = await res.json()
-    console.log(response)
-    if (response.ok) {
+    if (response.user) {
+      login(response.user)
       navigate('/')
       console.log("Login successful!");
     } else {
@@ -46,7 +46,6 @@ export const Login = ({type}) => {
     const credentials = { name, password};
     const res = await User.create(credentials);
     const response = await res.json()
-    console.log(response)
     if (response.ok) {
       await handleLogin(credentials)
     } else {
