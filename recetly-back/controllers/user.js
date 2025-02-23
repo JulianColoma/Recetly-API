@@ -27,7 +27,9 @@ export class UserController {
                 })
                 res
                     .cookie('access_token', token, {
-                        httpOnly:true
+                        httpOnly:true,
+                        secure: process.env.ENV == 'production',
+                        sameSite: process.env.ENV == 'production'? 'None' : 'Lax'
                     })
                     .send({user, token})
             } catch (error) {

@@ -89,16 +89,20 @@ export const Home = () =>{
                 </nav>
             </header>
             <main>
-                {user && 
-                    
-                    <div>
-                        <Link to="/recipeadd"><Button>Add recipe</Button></Link>
-                        {recipes.map((recipe) => (
+            {user && (
+                <div>
+                    <Link to="/recipeadd"><Button>Add recipe</Button></Link>
+                    {recipes?.length > 0 ? (
+                        recipes.map((recipe) => (
                             <RecipeCard key={recipe.id} recipe={recipe} />
-                        ))}
-                    </div>
-                }
+                        ))
+                    ) : (
+                        <p>No recipes available.</p>
+                    )}
+                </div>
+            )}
             </main>
+
             <footer>
                 <p>Desarrollado por Julián Valentín Coloma Visconti</p>
                 <p><a href="mailto:julian.coloma@alu.frlp.utn.edu.ar">julian.coloma@alu.frlp.utn.edu.ar</a></p>

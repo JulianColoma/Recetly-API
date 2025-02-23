@@ -17,6 +17,7 @@ export class User {
                 headers:{
                     "Content-Type": "application/json",
                 },
+                credentials: 'include', 
                 body: JSON.stringify({name, password})
             })
             
@@ -24,6 +25,7 @@ export class User {
     static logout =  async () => {
         return fetch('https://recetly.onrender.com/logout', {
             method: 'POST',
+            credentials: 'include', 
         })
         .then(res => res.json)
     }

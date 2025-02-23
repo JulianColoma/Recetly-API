@@ -1,8 +1,8 @@
 import pool from "../db/db.js";
 
 export class  RecipeModel{
-static getAll = async () =>{
-    const { rows: recipes } = await pool.query('SELECT * FROM recipes WHERE user_id = $1', [id])
+static getAll = async (user_id) =>{
+    const { rows: recipes } = await pool.query('SELECT * FROM recipes WHERE user_id = $1', [user_id])
     return recipes
 }
 static getById = async (id) =>{
