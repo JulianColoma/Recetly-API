@@ -60,6 +60,7 @@ export const Home = () =>{
     const {user, login, logout} = useAuth()
     const [recipes, setRecipes] = useState([])
     const navigate = useNavigate()
+    
     const hanldeClick = () =>{
         if(user){
             logout()
@@ -91,7 +92,7 @@ export const Home = () =>{
                 {user && 
                     
                     <div>
-                        <Button>Add recipe</Button>
+                        <Link to="/recipeadd"><Button>Add recipe</Button></Link>
                         {recipes.map((recipe) => (
                             <RecipeCard key={recipe.id} recipe={recipe} />
                         ))}

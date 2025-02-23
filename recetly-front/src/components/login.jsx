@@ -2,7 +2,7 @@ import { Button, Input, Stack, Card } from "@chakra-ui/react"
 import {Link} from 'react-router-dom'
 import { Field } from "@/components/ui/field"
 import styled from "styled-components"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { User } from "../../services/user.js"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../hooks/auth.jsx"
@@ -29,13 +29,14 @@ export const Login = ({type}) => {
 
   const handleLogin = async () => {
     
-    const credentials = { name, password};
+    const credentials = { name, password };
     const res = await User.login(credentials);
     const response = await res.json()
+    console.log(response)
     if (response.user) {
       login(response.user)
       navigate('/')
-      console.log("Login successful!");
+      console.log("Login successful!", user);
     } else {
       console.log("Login error");
     }

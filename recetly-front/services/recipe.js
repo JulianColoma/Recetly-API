@@ -1,6 +1,11 @@
 export class Recipe {
     static getAll = async () =>{
-        return fetch('https://recetly.onrender.com/recipes')
+        return fetch('https://recetly.onrender.com/recipes',
+            {
+                method: "GET",
+                credentials: "include", 
+              }
+        )
         .then(res => res.json())
         
     }
@@ -16,18 +21,20 @@ export class Recipe {
         .then(res => res.json())
         
     }
-    static add = async (data) =>{
+    static add = async (data, img) =>{
         return fetch(`https://recetly.onrender.com/recipes`,{
             method:'POST',
             body: data,
+            file: img,
         })
         .then(res => res.json())
         
     }
-    static update = async (data) =>{
+    static update = async (data, img) =>{
         return fetch(`https://recetly.onrender.com/recipes`,{
             method:'PUT',
             body: data,
+            file: img,
         })
         .then(res => res.json())
         

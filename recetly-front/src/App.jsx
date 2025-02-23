@@ -3,7 +3,7 @@ import { Login } from './components/login.jsx'
 import { Home } from './components/home.jsx'
 import { Routes, Route } from "react-router-dom";
 import { Detail } from './components/detail.jsx';
-import { Form } from './components/form';
+import { Form } from './components/form.jsx';
 
 function App() {
   const sampleRecipe = {
