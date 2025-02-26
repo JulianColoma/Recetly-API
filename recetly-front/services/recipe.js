@@ -6,37 +6,35 @@ export class Recipe {
                 credentials: "include", 
               }
         )
-        .then(res => res.json())
         
     }
     static getById = async (id) =>{
         return fetch(`https://recetly.onrender.com/recipes/${id}`)
-        .then(res => res.json())
         
     }
     static delete = async (id) =>{
         return fetch(`https://recetly.onrender.com/recipes/${id}`,{
             method: 'DELETE',
+            credentials: "include", 
         })
-        .then(res => res.json())
         
     }
     static add = async (data, img) =>{
         return fetch(`https://recetly.onrender.com/recipes`,{
             method:'POST',
+            credentials: "include", 
             body: data,
             file: img,
         })
-        .then(res => res.json())
         
     }
     static update = async (data, img) =>{
         return fetch(`https://recetly.onrender.com/recipes`,{
             method:'PUT',
+            credentials: "include", 
             body: data,
             file: img,
         })
-        .then(res => res.json())
         
     }
 }

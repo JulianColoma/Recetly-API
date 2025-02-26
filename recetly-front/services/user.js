@@ -3,6 +3,7 @@ export class User {
         
         return fetch('https://recetly.onrender.com/register', {
             method: 'POST',
+            credentials: 'include', 
             headers:{
                 "Content-Type": "application/json",
             },
@@ -27,11 +28,11 @@ export class User {
             method: 'POST',
             credentials: 'include', 
         })
-        .then(res => res.json)
     }
-    static delete =  async () => {
-        return fetch('https://recetly.onrender.com/delete', {
-            method: 'DELETE',
+    static get =  async () => {
+        return fetch('https://recetly.onrender.com/getuser', {
+            method: 'GET',
+            credentials: 'include', 
         })
         
     }

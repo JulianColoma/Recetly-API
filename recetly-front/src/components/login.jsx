@@ -2,7 +2,7 @@ import { Button, Input, Stack, Card } from "@chakra-ui/react"
 import {Link} from 'react-router-dom'
 import { Field } from "@/components/ui/field"
 import styled from "styled-components"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { User } from "../../services/user.js"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../hooks/auth.jsx"
@@ -24,7 +24,7 @@ const Here = styled.div`
 export const Login = ({type}) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const {user, login, logout} = useAuth()
+  const {user, setUser} = useAuth()
   const navigate = useNavigate()
 
   const handleLogin = async () => {
@@ -34,7 +34,7 @@ export const Login = ({type}) => {
     const response = await res.json()
     console.log(response)
     if (response.user) {
-      login(response.user)
+      setUser(response.user)
       navigate('/')
       console.log("Login successful!", user);
     } else {

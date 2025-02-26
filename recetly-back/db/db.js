@@ -19,7 +19,8 @@ try {
         user_id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         password TEXT NOT NULL,
-        admin BOOLEAN
+        admin BOOLEAN,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
      );
       CREATE TABLE IF NOT EXISTS recipes (
         id SERIAL PRIMARY KEY,

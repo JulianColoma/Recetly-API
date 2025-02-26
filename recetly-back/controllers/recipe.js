@@ -1,8 +1,7 @@
 import { RecipeModel } from "../models/recipe.js"
 import { recipeSchema } from "../schemas/recipe.js"
 import fs from 'fs'
-import dotenv from 'dotenv'
-dotenv.config()
+
 
 export class RecipeController {
     static getAll = async (req, res) => {
@@ -38,7 +37,7 @@ export class RecipeController {
         try {
             const photo = req.file 
             const validated_input = recipeSchema.parse(req.body);
-            validated_input.photo = photo.filename
+            validated_input.photo = `${photo.destination}/${photo.filename}`
             await RecipeModel.postRecipe(validated_input, user.user_id); 
             res.status(201).json({"ok": true}).end(); 
         } catch (error) {
@@ -52,7 +51,7 @@ export class RecipeController {
         try{
         const { id } = req.params
         const recipe = await RecipeModel.getById(id)
-        fs.unlink(`${process.env.BASEPATH + recipe.photo}`,(err) => {
+        fs.unlink(recipe.photo,(err) => {
             if (err) {
               console.error('Error al eliminar el archivo', err);
             } else {
@@ -73,9 +72,9 @@ export class RecipeController {
         const { id } = req.params
         const photo = req.file 
         const validated_input = recipeSchema.parse(req.body);
-        validated_input.photo = photo.filename
+        validated_input.photo = `${photo.destination}/${photo.filename}`
         const recipe = await RecipeModel.getById(id)
-        fs.unlink(`${process.env.BASEPATH + recipe.photo}`,(err) => {
+        fs.unlink(recipe.photo,(err) => {
             if (err) {
               console.error('Error al eliminar el archivo', err);
             } else {

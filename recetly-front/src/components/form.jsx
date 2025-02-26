@@ -1,9 +1,9 @@
-import { Button, Input, Stack, Card , IconButton, List} from "@chakra-ui/react"
+import { Button, Input, Image, Stack, Card , IconButton, List} from "@chakra-ui/react"
 import { Field } from "@/components/ui/field"
 import { FileUploadDropzone, FileUploadList, FileUploadRoot } from "@/components/ui/file-upload"
 import { NumberInputField, NumberInputRoot } from "@/components/ui/number-input"
-import { Link } from "react-router-dom"
-import { useState } from "react"
+import { Link, useLocation } from "react-router-dom"
+import { useState, useEffect } from "react"
 import { NativeSelectField, NativeSelectRoot } from "@/components/ui/native-select"
 import styled from "styled-components"
 import { GoTrash } from "react-icons/go"
@@ -21,10 +21,19 @@ const Container = styled.div`
 `;
 
 export const Form = ({ type }) => {
-  const [recipe, setRecipe] = useState({ title: '', ingredients: [], steps: [], time: '', comments: '', difficulty: 1});
+  const prevRecipe = useLocation()
+  const [recipe, setRecipe] = useState({ title: '', ingredients: [], steps: [], time: '', comments: '', difficulty: 1, photo:""});
   const [ingredient, setIngredient] = useState({ name: '', cant: '', unit: '' });
   const [step, setStep] = useState('');
-  const units = ["g", "kg", "oz", "u"];
+  const units = ["g", "kg", "oz", "u", "ml", "l", "cup"];
+
+  useEffect(() => {
+    if (prevRecipe.state && type != "add") {
+      setRecipe(prevRecipe.state);
+    }
+  }, [prevRecipe]);
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecipe(prev => ({ ...prev, [name]: value }));
@@ -38,7 +47,7 @@ export const Form = ({ type }) => {
   }
   const handleFileChange = (e) => {
     if (e.files.length > 0) {
-      setRecipe((prev) => ({ ...prev, file: e.files[0] }));
+      setRecipe((prev) => ({ ...prev, photo: e.files[0] }));
     }
   };
   
@@ -61,10 +70,14 @@ export const Form = ({ type }) => {
     formData.append("comments", recipe.comments);
     formData.append("difficulty", recipe.difficulty);
     const image = new FormData();
-    image.append("file", recipe.file);
+    image.append("file", recipe.photo);
     
     try {
-      await Recipe.add(formData, image)
+      if(type == "add"){
+        await Recipe.add(formData, image)
+      }else{
+        await Recipe.update(formData, image)
+      }
     } catch (error) {
       console.error(error);
     }
@@ -88,9 +101,11 @@ export const Form = ({ type }) => {
               </NumberInputRoot>
             </Field>
             <Field label="Image Upload">
-              <FileUploadRoot maxW="l" accept="image/png, image/jpeg" alignItems="stretch" maxFileSize={5*(2**20)} onFileAccept={handleFileChange}>
+
+              <FileUploadRoot maxW={recipe.photo? "xl" : "l"} accept="image/png, image/jpeg" alignItems="stretch" maxFileSize={5*(2**20)} onFileAccept={handleFileChange}>
                 <FileUploadDropzone label="Drag and drop here to upload" type="file" description=".png, .jpg up to 5MB" 
                 />
+                {type != "add" && recipe.photo && <Image src={recipe.photo}></Image>}
                 <FileUploadList />
               </FileUploadRoot>
               
@@ -106,18 +121,18 @@ export const Form = ({ type }) => {
                 </NativeSelectRoot>
                 <Button onClick={handleAddIngredient}>Add</Button>
               </Stack>
-              <List.Root>{recipe.ingredients.map((ing, index) => (<List.Item key={index} >{`${ing}`}<IconButton aria-label="delete" size="xs" name="ingredients" value={index} onClick={handleDelete}>
+              {recipe.ingredients && <List.Root>{recipe.ingredients.map((ing, index) => (<List.Item key={index} >{`${ing}`}<IconButton aria-label="delete" size="xs" name="ingredients" value={index} onClick={handleDelete}>
                 <GoTrash/>
-                </IconButton></List.Item>))}</List.Root>
+                </IconButton></List.Item>))}</List.Root>}
             </Field>
             <Field label="Steps">
               <Stack direction="row">
                 <Input placeholder="Step description" value={step} onChange={e => setStep(e.target.value)} />
                 <Button onClick={handleAddStep}>Add</Button>
               </Stack>
-              <List.Root>{recipe.steps.map((stp, index) => (<List.Item key={index}>{`${index +1}. ${stp}`} <IconButton aria-label="delete" size="xs" name="steps" value={index} onClick={handleDelete}>
+              {recipe.steps && <List.Root>{recipe.steps.map((stp, index) => (<List.Item key={index}>{`${index +1}. ${stp}`} <IconButton aria-label="delete" size="xs" name="steps" value={index} onClick={handleDelete}>
                 <GoTrash/>
-                </IconButton></List.Item> ))}</List.Root>
+                </IconButton></List.Item> ))}</List.Root>}
             </Field>
             <Field label="Elaboration time"><Input type="number" name="time" value={recipe.time} onChange={handleChange} /></Field>
             <Field label="Comments"><Input name="comments" value={recipe.comments} onChange={handleChange} /></Field>

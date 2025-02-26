@@ -4,6 +4,9 @@ import cookieParser from 'cookie-parser';
 import {getUserData} from './middlewares/user.js'
 import { userRouter } from './routes/users.js';
 import cors from 'cors';
+import { deleteNonAdminUsers } from './cron.js';
+
+deleteNonAdminUsers()
 
 const PORT = process.env.PORT ?? 1234
 

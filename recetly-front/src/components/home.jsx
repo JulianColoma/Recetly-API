@@ -1,9 +1,11 @@
 import styled from "styled-components"
 import { Link, useNavigate } from 'react-router-dom'
-import { Button, Card , Image } from "@chakra-ui/react"
+import { Button, Card , Image, IconButton } from "@chakra-ui/react"
 import { useAuth } from "../../hooks/auth.jsx"
 import { useEffect, useState } from "react"
 import { Recipe } from "../../services/recipe.js"
+import { GoTrash, GoEye, GoPencil } from "react-icons/go"
+import { User } from "../../services/user.js"
 const Container = styled.div`
 
     margin: 0;
@@ -44,38 +46,68 @@ const Container = styled.div`
     }
 
 `
+
 const RecipeCard = (recipe) =>{
-    const path = ''
+    const navigate = useNavigate()
+    const handleDelete = async () => {
+        const confirmDelete = window.confirm("¿Estás seguro de que quieres eliminar esto?");
+        const { id } = e.target.value;
+        if(confirmDelete){
+            try{
+                const res = await Recipe.delete(id);
+                const response = await res.json();
+                console.log("Receta eliminada: ",response);
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
     return(
         <Card.Root>
             <Card.Header>recipe.title</Card.Header>
             <Card.Body>
-                <Image src={path + recipe.photo}/>
+                <Image src={recipe.photo}/>
             </Card.Body>
-            <Card.Footer></Card.Footer>
+            <Card.Footer>
+            <IconButton aria-label="view" size="xs" value={recipe} onClick={(e)=>{navigate('/recipe', {state: e.target.value})}}>
+                <GoEye/>
+            </IconButton>
+            <IconButton aria-label="edit" size="xs" value={recipe}  onClick={(e)=>{navigate('/recipeupdate', {state: e.target.value})}}>
+                <GoPencil/>
+            </IconButton>
+            <IconButton aria-label="delete" size="xs" value={recipe} onClick={(e)=>handleDelete}>
+                <GoTrash/>
+            </IconButton>
+            </Card.Footer>
         </Card.Root>
     )
 }
 export const Home = () =>{
-    const {user, login, logout} = useAuth()
-    const [recipes, setRecipes] = useState([])
     const navigate = useNavigate()
+    const {user, setUser} = useAuth()
+    const [recipes, setRecipes] = useState([])
     
-    const hanldeClick = () =>{
+    const hanldeClick = async () =>{
         if(user){
-            logout()
+            try{
+            await User.logout()
+            setUser(null);
+            console.log("log out successful")
+            }catch(e){
+                console.log(e)
+            }
         }else{
             navigate('/login')
         }
     }
     useEffect(() =>{
-        const fetchRecipes = async () => {
-            if (user) {
-                const response = await Recipe.getAll();
-                setRecipes(response);
-            }
-        };
-        fetchRecipes();
+        if (user) {
+            const fetchRecipes = async () => {
+                    const response = await Recipe.getAll();
+                    setRecipes(response);
+            };
+            fetchRecipes();
+        }
     }, [user]);
     return(
         <Container>
