@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { GoArrowLeft } from "react-icons/go";
 const Container = styled.main`
     height: 100vh;
     display: flex;
@@ -7,10 +9,14 @@ const Container = styled.main`
     justify-content: center;
 `
 
-export const Detail = ({ recipe }) => {
+export const Detail = () => {
+  const recipeData = useLocation()
+  const recipe = recipeData.state
   if (!recipe) return <p>Cargando receta...</p>;
 
   return (
+    <>
+    <Link to="/"><GoArrowLeft/></Link>
     <Container>
     <article>
       <img src={recipe.photo} alt={recipe.title} />
@@ -39,6 +45,7 @@ export const Detail = ({ recipe }) => {
       </section>
     </article>
     </Container>
+    </>
   );
 };
 

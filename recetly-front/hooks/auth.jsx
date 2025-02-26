@@ -1,19 +1,25 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { User } from "../services/user.js";
 
 const AuthContext = createContext()
 
 export function AuthProvider({children}){
-    const [user, setUser] = useState(null)
-
-    const login = (userdata) => {setUser(userdata)}
-    const logout = async () => {
-        setUser(null)
-        await User.logout()
-    }
-
+    const [user, setUser] = useState(null);
+    
+      useEffect(async() => {
+        try{
+          const res = await User.get();
+          const response = await res.json();
+          const session = response.user;
+          if (session) {
+            setUser(session);
+          }
+        }catch(e){
+          setUser(null)
+        }
+      }, []);
     return (
-        <AuthContext.Provider value={{user, login, logout}}>
+        <AuthContext.Provider value={{user, setUser}}>
             {children}
         </AuthContext.Provider>
     )
