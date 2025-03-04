@@ -24,7 +24,7 @@ const Container = styled.div`
 export const Form = ({ type }) => {
   const prevRecipe = useLocation()
   const {user, setUser} = useAuth()
-  const [recipe, setRecipe] = useState({ title: '', ingredients: [], steps: [], time: '', comments: '', difficulty: 1, photo:""});
+  const [recipe, setRecipe] = useState({ title: '', ingredients: [], steps: [], time: 0, comments: '', difficulty: 1, photo:""});
   const [ingredient, setIngredient] = useState({ name: '', cant: '', unit: '' });
   const [step, setStep] = useState('');
   const units = ["g", "kg", "oz", "u", "ml", "l", "cup"];
@@ -64,15 +64,24 @@ export const Form = ({ type }) => {
     setStep('');
   };
   const postRecipe = async () => {
-    const formData = new FormData();
+    console.log(recipe)
+    /*const formData = new FormData();
     formData.append("title", recipe.title);
-    formData.append("ingredients", JSON.stringify(recipe.ingredients));
-    formData.append("steps", JSON.stringify(recipe.steps));
-    formData.append("time", recipe.time);
+    formData.append("ingredients", recipe.ingredients);
+    formData.append("steps", recipe.steps);
+    formData.append("elaboration_time", parseInt(recipe.time));
     formData.append("comments", recipe.comments);
-    formData.append("difficulty", recipe.difficulty);
+    formData.append("difficulty", parseInt(recipe.difficulty));*/
+    const formData = {
+      title: recipe.title,
+      ingredients: recipe.ingredients, // Este es un array
+      steps: recipe.steps, // Este es un array
+      elaboration_time: parseInt(recipe.time),
+      comments: recipe.comments,
+      difficulty: parseInt(recipe.difficulty),
+  };
     const image = new FormData();
-    image.append("file", recipe.photo);
+    image.append("file", recipe.photo); 
     
     try {
       let res

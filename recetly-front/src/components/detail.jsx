@@ -10,10 +10,11 @@ const Container = styled.main`
 `
 
 export const Detail = () => {
+  const {user, setUser} = useAuth()
   const recipeData = useLocation()
   const recipe = recipeData.state
   if (!recipe) return <p>Cargando receta...</p>;
-
+  if (!user) return <p>Page not found</p>
   return (
     <>
     <Link to="/"><GoArrowLeft/></Link>

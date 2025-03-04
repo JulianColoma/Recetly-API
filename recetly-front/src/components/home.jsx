@@ -100,15 +100,32 @@ export const Home = () =>{
             navigate('/login')
         }
     }
-    useEffect(() =>{
-        if (user) {
-            const fetchRecipes = async () => {
-                    const response = await Recipe.getAll();
+    useEffect(() => {
+        let ignore = false;
+    
+        async function fetchRecipes() {
+            setRecipes(null); 
+            try {
+                const response = await Recipe.getAll();
+                if (!ignore) {
                     setRecipes(response);
-            };
+                }
+            } catch (error) {
+                if (!ignore) {
+                    console.error("Error al obtener recetas:", error);
+                }
+            }
+        }
+    
+        if (user) {
             fetchRecipes();
         }
+    
+        return () => {
+            ignore = true;
+        };
     }, [user]);
+    
     return(
         <Container>
             <header>

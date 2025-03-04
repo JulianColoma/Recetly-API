@@ -6,18 +6,22 @@ const AuthContext = createContext()
 export function AuthProvider({children}){
     const [user, setUser] = useState(null);
     
-      useEffect(async() => {
-        try{
-          const res = await User.get();
-          const response = await res.json();
-          const session = response.user;
-          if (session) {
-            setUser(session);
+    useEffect(() => {
+      async function fetchUser() {
+          try {
+              const res = await User.get();
+              const response = await res.json();
+              const session = response.user;
+              if (session) {
+                  setUser(session);
+              }
+          } catch (e) {
+              setUser(null);
           }
-        }catch(e){
-          setUser(null)
-        }
-      }, []);
+      }
+  
+      fetchUser();
+  }, []);
     return (
         <AuthContext.Provider value={{user, setUser}}>
             {children}

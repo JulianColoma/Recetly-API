@@ -11,7 +11,7 @@ static getById = async (id) =>{
 }
 static postRecipe = async (input, user_id) =>{
     
-    const { title,photo, difficulty, comments, ingredients, steps, elaboration_time } = await input
+    const { title ,photo, difficulty, comments, ingredients, steps, elaboration_time } = await input
 
     await pool.query(
         `INSERT INTO recipes (title,photo, difficulty, comments, ingredients, steps, user_id, elaboration_time)
