@@ -8,6 +8,7 @@ import { NativeSelectField, NativeSelectRoot } from "@/components/ui/native-sele
 import styled from "styled-components"
 import { GoTrash } from "react-icons/go"
 import { Recipe } from "../../services/recipe"
+import { useAuth } from "../../hooks/auth.jsx"
 
 const Container = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const Container = styled.div`
 
 export const Form = ({ type }) => {
   const prevRecipe = useLocation()
+  const {user, setUser} = useAuth()
   const [recipe, setRecipe] = useState({ title: '', ingredients: [], steps: [], time: '', comments: '', difficulty: 1, photo:""});
   const [ingredient, setIngredient] = useState({ name: '', cant: '', unit: '' });
   const [step, setStep] = useState('');
@@ -85,67 +87,69 @@ export const Form = ({ type }) => {
       console.error(error);
     }
   };
-  
-  return (
-    <Container>
-      <Card.Root minW="80vw" margin={10}>
-        <Card.Header>
-          <Card.Title>Recipe Form</Card.Title>
-          <Card.Description>
-            Fill in the form below to {type === 'add' ? 'add' : 'update'} a recipe
-          </Card.Description>
-        </Card.Header>
-        <Card.Body>
-          <Stack spacing={4}>
-            <Field label="Title"><Input name="title" value={recipe.title} onChange={handleChange} /></Field>
-            <Field label="Difficulty">
-              <NumberInputRoot min={1} max={5} defaultValue={recipe.difficulty ? recipe.difficulty : 1} onChange={(e) => setRecipe(prev => ({ ...prev, difficulty: e.target.value }))}>
-                <NumberInputField />
-              </NumberInputRoot>
-            </Field>
-            <Field label="Image Upload">
+  if (!user) return <p>Page not found</p>
 
-              <FileUploadRoot maxW={recipe.photo? "xl" : "l"} accept="image/png, image/jpeg" alignItems="stretch" maxFileSize={5*(2**20)} onFileAccept={handleFileChange}>
-                <FileUploadDropzone label="Drag and drop here to upload" type="file" description=".png, .jpg up to 5MB" 
-                />
-                {type != "add" && recipe.photo && <Image src={recipe.photo}></Image>}
-                <FileUploadList />
-              </FileUploadRoot>
-              
-            </Field>
-            <Field label="Ingredients">
-              <Stack direction="row">
-                <Input placeholder="Name" value={ingredient.name} onChange={e => setIngredient({ ...ingredient, name: e.target.value })} />
-                <Input type="number" placeholder="Quantity" value={ingredient.cant} onChange={e => setIngredient({ ...ingredient, cant: e.target.value })} />
-                <NativeSelectRoot value={ingredient.unit} onChange={e => setIngredient({ ...ingredient, unit: e.target.value })}>
-                  <NativeSelectField placeholder="Unit">
-                    {units.map(unit => <option key={unit} value={unit}>{unit}</option>)}
-                  </NativeSelectField>
-                </NativeSelectRoot>
-                <Button onClick={handleAddIngredient}>Add</Button>
-              </Stack>
-              {recipe.ingredients && <List.Root>{recipe.ingredients.map((ing, index) => (<List.Item key={index} >{`${ing}`}<IconButton aria-label="delete" size="xs" name="ingredients" value={index} onClick={handleDelete}>
-                <GoTrash/>
-                </IconButton></List.Item>))}</List.Root>}
-            </Field>
-            <Field label="Steps">
-              <Stack direction="row">
-                <Input placeholder="Step description" value={step} onChange={e => setStep(e.target.value)} />
-                <Button onClick={handleAddStep}>Add</Button>
-              </Stack>
-              {recipe.steps && <List.Root>{recipe.steps.map((stp, index) => (<List.Item key={index}>{`${index +1}. ${stp}`} <IconButton aria-label="delete" size="xs" name="steps" value={index} onClick={handleDelete}>
-                <GoTrash/>
-                </IconButton></List.Item> ))}</List.Root>}
-            </Field>
-            <Field label="Elaboration time"><Input type="number" name="time" value={recipe.time} onChange={handleChange} /></Field>
-            <Field label="Comments"><Input name="comments" value={recipe.comments} onChange={handleChange} /></Field>
-          </Stack>
-        </Card.Body>
-        <Card.Footer justifyContent="flex-start">
-          <Link to='/'><Button variant="outline">Cancel</Button></Link>
-          <Button variant="solid" onClick={postRecipe}>Post</Button>
-        </Card.Footer>
-      </Card.Root>
-    </Container>
-  );
-}
+    return (
+      <Container>
+        <Card.Root minW="80vw" margin={10}>
+          <Card.Header>
+            <Card.Title>Recipe Form</Card.Title>
+            <Card.Description>
+              Fill in the form below to {type === 'add' ? 'add' : 'update'} a recipe
+            </Card.Description>
+          </Card.Header>
+          <Card.Body>
+            <Stack spacing={4}>
+              <Field label="Title"><Input name="title" value={recipe.title} onChange={handleChange} /></Field>
+              <Field label="Difficulty">
+                <NumberInputRoot min={1} max={5} defaultValue={recipe.difficulty ? recipe.difficulty : 1} onChange={(e) => setRecipe(prev => ({ ...prev, difficulty: e.target.value }))}>
+                  <NumberInputField />
+                </NumberInputRoot>
+              </Field>
+              <Field label="Image Upload">
+  
+                <FileUploadRoot maxW={recipe.photo? "xl" : "l"} accept="image/png, image/jpeg" alignItems="stretch" maxFileSize={5*(2**20)} onFileAccept={handleFileChange}>
+                  <FileUploadDropzone label="Drag and drop here to upload" type="file" description=".png, .jpg up to 5MB" 
+                  />
+                  {type != "add" && recipe.photo && <Image src={recipe.photo}></Image>}
+                  <FileUploadList />
+                </FileUploadRoot>
+                
+              </Field>
+              <Field label="Ingredients">
+                <Stack direction="row">
+                  <Input placeholder="Name" value={ingredient.name} onChange={e => setIngredient({ ...ingredient, name: e.target.value })} />
+                  <Input type="number" placeholder="Quantity" value={ingredient.cant} onChange={e => setIngredient({ ...ingredient, cant: e.target.value })} />
+                  <NativeSelectRoot value={ingredient.unit} onChange={e => setIngredient({ ...ingredient, unit: e.target.value })}>
+                    <NativeSelectField placeholder="Unit">
+                      {units.map(unit => <option key={unit} value={unit}>{unit}</option>)}
+                    </NativeSelectField>
+                  </NativeSelectRoot>
+                  <Button onClick={handleAddIngredient}>Add</Button>
+                </Stack>
+                {recipe.ingredients && <List.Root>{recipe.ingredients.map((ing, index) => (<List.Item key={index} >{`${ing}`}<IconButton aria-label="delete" size="xs" name="ingredients" value={index} onClick={handleDelete}>
+                  <GoTrash/>
+                  </IconButton></List.Item>))}</List.Root>}
+              </Field>
+              <Field label="Steps">
+                <Stack direction="row">
+                  <Input placeholder="Step description" value={step} onChange={e => setStep(e.target.value)} />
+                  <Button onClick={handleAddStep}>Add</Button>
+                </Stack>
+                {recipe.steps && <List.Root>{recipe.steps.map((stp, index) => (<List.Item key={index}>{`${index +1}. ${stp}`} <IconButton aria-label="delete" size="xs" name="steps" value={index} onClick={handleDelete}>
+                  <GoTrash/>
+                  </IconButton></List.Item> ))}</List.Root>}
+              </Field>
+              <Field label="Elaboration time"><Input type="number" name="time" value={recipe.time} onChange={handleChange} /></Field>
+              <Field label="Comments"><Input name="comments" value={recipe.comments} onChange={handleChange} /></Field>
+            </Stack>
+          </Card.Body>
+          <Card.Footer justifyContent="flex-start">
+            <Link to='/'><Button variant="outline">Cancel</Button></Link>
+            <Button variant="solid" onClick={postRecipe}>Post</Button>
+          </Card.Footer>
+        </Card.Root>
+      </Container>
+    );
+  }
+
