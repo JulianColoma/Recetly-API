@@ -29,6 +29,6 @@
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/yourusername/recetly.git
+git clone https://github.com/JulianColoma/Recetly-API
 cd recetly
 npm install
